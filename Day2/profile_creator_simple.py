@@ -1,11 +1,10 @@
-#!/usr/bin/env python3
-"""Beginner-friendly profile creator with no functions.
-Includes:
-- data types: string, int, float, boolean
-- data structures: list and dict
-- operators: assignment, arithmetic, comparison, logical, membership, identity
-All uses are commented where they appear.
-"""
+#Beginner-friendly profile creator with no functions.
+#Includes:
+#- data types: string, int, float, boolean
+#- data structures: list and dict
+#- operators: assignment, arithmetic, comparison, logical, membership, identity
+#All uses are commented where they appear.
+
 
 # Using assignment operator to create data structures
 profiles_list = []  # list data structure
