@@ -3,7 +3,8 @@
 - two or more data types: string, int, float, boolean
 - a data structure: list and dict
 - two or more operators: assignment, arithmetic, comparison, logical, membership, identity
-Comments mark where each is used.
+- collects gender, height, weight, and calculates BMI
+Comments mark where each is used.  
 """
 
 # using a list and a dict data structure to store multiple profiles
@@ -29,21 +30,42 @@ def create_profile():
         print('Invalid age, please enter a number')
         return
 
-    # using float data type for balance
-    balance_input = input('Balance (e.g. 123.45): ').strip()
+    # using string data type for gender
+    gender = input('Gender (male/female/other): ').strip()  # joe mange comment: gender stored as string
+
+    # using float data type for height in meters
+    height_input = input('Height in meters (e.g. 1.75): ').strip()
     try:
-        balance = float(balance_input)  # using float() to create a float value
+        height = float(height_input)  # using float() to create a float value
     except ValueError:
-        balance = 0.0  # using assignment operator to set default
+        print('Invalid height, please enter a number like 1.75')
+        return
+
+    # using float data type for weight in kilograms
+    weight_input = input('Weight in kilograms (e.g. 70.5): ').strip()
+    try:
+        weight = float(weight_input)  # using float() to create a float value
+    except ValueError:
+        print('Invalid weight, please enter a number like 70.5')
+        return
 
     # using boolean data type via helper
     is_active = input_bool('Is active? (y/n): ')
+
+    # compute BMI using arithmetic operators
+    if height <= 0 or weight <= 0:  # using comparison operator
+        print('Height and weight must be positive values')
+        return
+    bmi = weight / (height * height)  # using division and multiplication # joe mange comment: calculate BMI
 
     # using a dict data structure to hold one profile
     profile = {
         'name': name,  # string
         'age': age,    # int
-        'balance': balance,  # float
+        'gender': gender,  # string
+        'height': height,  # float
+        'weight': weight,  # float
+        'bmi': bmi,  # float
         'active': is_active  # boolean
     }
 
@@ -71,6 +93,16 @@ def create_profile():
     else:
         status = 'Minor user'
 
+    # determine BMI category using comparison operators
+    if bmi < 18.5:
+        bmi_status = 'Underweight'
+    elif bmi < 25:
+        bmi_status = 'Normal weight'
+    elif bmi < 30:
+        bmi_status = 'Overweight'
+    else:
+        bmi_status = 'Obese'
+
     # using membership operator to check if 'admin' appears in the name
     if 'admin' in name.lower():  # using 'in' (membership)
         profile['role'] = 'admin'  # using assignment to set a new dict key
@@ -79,7 +111,7 @@ def create_profile():
     if profile.get('role') is None:  # using 'is' (identity)
         profile['role'] = 'user'
 
-    print(f"Created profile for {name}. {years_to_retire} years to retirement. Status: {status}")
+    print(f"Created profile for {name}. {years_to_retire} years to retirement. Status: {status}. BMI: {bmi:.1f} ({bmi_status})")
 
 
 def list_profiles():
@@ -88,7 +120,7 @@ def list_profiles():
         return
     for i, p in enumerate(profiles_list, start=1):
         # using string formatting to display values of different data types
-        print(f"{i}. {p['name']} - age: {p['age']} - balance: {p['balance']} - active: {p['active']} - role: {p.get('role')}")
+        print(f"{i}. {p['name']} - age: {p['age']} - gender: {p['gender']} - height: {p['height']} - weight: {p['weight']} - BMI: {p['bmi']:.1f} - active: {p['active']} - role: {p.get('role')}")
 
 
 def list_profiles_dict():
@@ -97,7 +129,7 @@ def list_profiles_dict():
         return
     for key, p in profiles_dict.items():
         # display the dict key and profile
-        print(f"{key}: {p['name']} - age: {p['age']} - balance: {p['balance']} - active: {p['active']} - role: {p.get('role')}")
+        print(f"{key}: {p['name']} - age: {p['age']} - gender: {p['gender']} - height: {p['height']} - weight: {p['weight']} - BMI: {p['bmi']:.1f} - active: {p['active']} - role: {p.get('role')}")
 
 
 def main():
