@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pizza Shop Dashboard Report</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css"/>
+    <style>
+        body {
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+        .dashboard {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 30px;
+            margin-bottom: 20px;
+        }
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        .stat-value {
+            font-size: 32px;
+            font-weight: bold;
+        }
+        .stat-label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        .dashboard-header {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            margin-bottom: 24px;
+        }
+        .pizza-logo {
+            width: 72px;
+            height: 72px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #ffd54f 0%, #ffb300 100%);
+            border-radius: 22px;
+            box-shadow: 0 8px 18px rgba(0,0,0,0.12);
+        }
+        .pizza-logo svg {
+            width: 44px;
+            height: 44px;
+        }
+        table {
+            font-size: 14px;
+        }
+        .status-badge {
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .status-pending {
+            background-color: #ffc107;
+            color: #000;
+        }
+        .status-preparing {
+            background-color: #17a2b8;
+            color: #fff;
+        }
+        .status-ready {
+            background-color: #28a745;
+            color: #fff;
+        }
+        .status-delivered {
+            background-color: #6c757d;
+            color: #fff;
+        }
+        #map {
+            width: 100%;
+            height: 420px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-lg">
+        <div class="dashboard-header">
+            <div class="pizza-logo">
+                <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <circle cx="32" cy="32" r="30" fill="#f5d07b" stroke="#cc8a2f" stroke-width="4"/>
+                    <path d="M10 32c0-8.8 7.2-16 16-16 1.6 0 3.2.2 4.7.6l7.9 23.7-28.6 9.6C10.8 47.1 10 39.7 10 32Z" fill="#f2bb4f"/>
+                    <circle cx="25" cy="37" r="4" fill="#d65a32"/>
+                    <circle cx="36" cy="27" r="4" fill="#d65a32"/>
+                    <circle cx="42" cy="38" r="4" fill="#d65a32"/>
+                    <path d="M32 6c14.3 0 26 11.7 26 26S46.3 58 32 58 6 46.3 6 32 17.7 6 32 6Z" fill="none" stroke="#bf7d3f" stroke-width="3" opacity="0.35"/>
+                </svg>
+            </div>
+            <h1 class="mb-0">Pizza Shop Dashboard Report</h1>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="stat-card">
+                    <div class="stat-label">Total Orders</div>
+                    <div class="stat-value">52</div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="stat-card">
+                    <div class="stat-label">Total Revenue</div>
+                    <div class="stat-value">$439.00</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="dashboard">
+            <h3 class="mb-3">Revenue Breakdown by Size</h3>
+            <table class="table table-striped">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Pizza Size</th>
+                        <th>Count</th>
+                        <th>Total Value</th>
+                        <th>Percentage</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>LARGE</strong></td>
+                        <td>12</td>
+                        <td>$120.00</td>
+                        <td>27.3%</td>
+                    </tr>
+                    <tr>
+                        <td><strong>MEDIUM</strong></td>
+                        <td>14</td>
+                        <td>$105.00</td>
+                        <td>23.9%</td>
+                    </tr>
+                    <tr>
+                        <td><strong>SMALL</strong></td>
+                        <td>14</td>
+                        <td>$70.00</td>
+                        <td>15.9%</td>
+                    </tr>
+                    <tr>
+                        <td><strong>SU</strong></td>
+                        <td>12</td>
+                        <td>$144.00</td>
+                        <td>32.8%</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="dashboard">
+            <h3 class="mb-3">Order Location Map</h3>
+            <div id="map"></div>
+        </div>
+
+        <div class="dashboard">
+            <h3 class="mb-3">All Orders</h3>
+            <table class="table table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Order #</th>
+                        <th>Size</th>
+                        <th>Name</th>
+                        <th>Phone</th>
+                        <th>Location</th>
+                        <th>Toppings</th>
+                        <th>Status</th>
+                        <th>Cost</th>
+                        <th>Created</th>
+                        <th>Updated</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>#1</td>
+                        <td><strong>SMALL</strong></td>
+                        <td>Aaron Smith</td>
+                        <td>0151 555 1000</td>
+                        <td>L1 1AA</td>
+                        <td>pepperoni</td>
+                        <td><span class="status-badge status-pending">PENDING</span></td>
+                        <td>$5.00</td>
+                        <td>2026-06-08 12:14:27</td>
+                        <td>2026-06-08 12:14:27</td>
+                    </tr>
+                    <tr>
+                        <td>#2</td>
+                        <td><strong>MEDIUM</strong></td>
+                        <td>Bethany Jones</td>
+                        <td>0151 555 1001</td>
+                        <td>L2 2BB</td>
+                        <td>ham,onion</td>
+                        <td><span class="status-badge status-preparing">PREPARING</span></td>
+                        <td>$7.50</td>
+                        <td>2026-06-08 12:14:27</td>
+                        <td>2026-06-08 12:14:27</td>
+                    </tr>
+                    <tr>
+                        <td>#3</td>
+                        <td><strong>LARGE</strong></td>
+                        <td>Connor Brown</td>
+                        <td>0151 555 1002</td>
+                        <td>L3 3CC</td>
+                        <td>mushroom,bell pepper</td>
+                        <td><span class="status-badge status-ready">READY</span></td>
+                        <td>$10.00</td>
+                        <td>2026-06-08 12:14:27</td>
+                        <td>2026-06-08 12:14:27</td>
+                    </tr>
+                    <tr>
+                        <td>#4</td>
+                        <td><strong>SU</strong></td>
+                        <td>Danielle Wilson</td>
+                        <td>0151 555 1003</td>
+                        <td>L4 4DD</td>
+                        <td>sausage,onion</td>
+                        <td><span class="status-badge status-delivered">DELIVERED</span></td>
+                        <td>$12.00</td>
+                        <td>2026-06-08 12:14:27</td>
+                        <td>2026-06-08 12:14:27</td>
+                    </tr>
+                    <tr>
+                        <td>#5</td>
+                        <td><strong>SMALL</strong></td>
+                        <td>Ethan Taylor</td>
+                        <td>0151 555 1004</td>
+                        <td>L5 5EE</td>
+                        <td>vegetarian</td>
+                        <td><span class="status-badge status-pending">PENDING</span></td>
+                        <td>$5.00</td>
+                        <td>2026-06-08 12:14:27</td>
+                        <td>2026-06-08 12:14:27</td>
+                    </tr>
+                    <tr>
+                        <td>#6</td>
+                        <td><strong>MEDIUM</strong></td>
+                        <td>Fiona Harris</td>
+                        <td>0151 555 1005</td>
+                        <td>L6 6FF</td>
+                        <td>three cheese</td>
+                        <td><span class="status-badge status-preparing">PREPARING</span></td>
+                        <td>$7.50</td>
+                        <td>2026-06-08 12:14:27</td>
+                        <td>2026-06-08 12:14:27</td>
+                    </tr>
+                    <tr>
+                        <td>#7</td>
+                        <td><strong>LARGE</strong></td>
+                        <td>George Evans</td>
+                        <td>0151 555 1006</td>
+                        <td>L7 7GG</td>
+                        <td>ham,pineapple</td>
+                        <td><span class="status-badge status-ready">READY</span></td>
+                        <td>$10.00</td>
+                        <td>2026-06-08 12:14:27</td>
+                        <td>2026-06-08 12:14:27</td>
+                    </tr>
+                    <tr>
+                        <td>#8</td>
+                        <td><strong>SU</strong></td>
+                        <td>Hannah Clark</td>
+                        <td>0151 555 1007</td>
+                        <td>L8 8HH</td>
+                        <td>garlic,herb</td>
+                        <td><span class="status-badge status-delivered">DELIVERED</span></td>
+                        <td>$12.00</td>
+                        <td>2026-06-08 12:14:27</td>
+                        <td>2026-06-08 12:14:27</td>
+                    </tr>
+                    <tr>
+                        <td>#9</td>
+                        <td><strong>SMALL</strong></td>
+                        <td>Ian Roberts</td>
+                        <td>0151 555 1008</td>
+                        <td>L9 9JJ</td>
+                        <td>spinach,feta</td>
+                        <td><span class="status-badge status-pending">PENDING</span></td>
+                        <td>$5.00</td>
+                        <td>2026-06-08 12:14:27</td>
+                        <td>2026-06-08 12:14:27</td>
+                    </tr>
+                    <tr>
+                        <td>#10</td>
+                        <td><strong>MEDIUM</strong></td>
+                        <td>Jasmine Lewis</td>
+                        <td>0151 555 1009</td>
+                        <td>L10 1LL</td>
+                        <td>bacon,tomato</td>
+                        <td><span class="status-badge status-preparing">PREPARING</span></td>
+                        <td>$7.50</td>
+                        <td>2026-06-08 12:14:27</td>
+                        <td>2026-06-08 12:14:27</td>
+                    </tr>
+                    <tr>
+                        <td>#11</td>
+                        <td><strong>LARGE</strong></td>
+                        <td>Kyle Walker</td>
+                        <td>0151 555 1010</td>
+                        <td>L11 2MM</td>
+                        <td>chicken,garlic</td>
+                        <td><span class="status-badge status-ready">READY</span></td>
+                        <td>$10.00</td>
+                        <td>2026-06-08 12:14:27</td>
+                        <td>2026-06-08 12:14:27</td>
+                    </tr>
+                    <tr>
+                        <td>#12</td>
+                        <td><strong>SU</strong></td>
+                        <td>Laura Hall</td>
+                        <td>0151 555 1011</td>
+                        <td>L12 3NN</td>
+                        <td>fresh mozzarella</td>
+                        <td><span class="status-badge status-delivered">DELIVERED</span></td>
+                        <td>$12.00</td>
+                        <td>2026-06-08 12:14:27</td>
+                        <td>2026-06-08 12:14:27</td>
+                    </tr>
+                    <tr>
+                        <td>#13</td>
+                        <td><strong>SMALL</strong></td>
+                        <td>Mason Allen</td>
+                        <td>0151 555 1012</td>
+                        <td>L13 4PP</td>
+                        <td>olives,tomato</td>
+                        <td><span class="status-badge status-pending">PENDING</span></td>
+                        <td>$5.00</td>
+                        <td>2026-06-08 12:14:27</td>
+                        <td>2026-06-08 12:14:27</td>
+                    </tr>
+                    <tr>
+                        <td>#14</td>
+                        <td><strong>MEDIUM</strong></td>
+                        <td>Nina Young</td>
+                        <td>0151 555 1013</td>
+                        <td>L14 5QQ</td>
+                        <td>seafood</td>
+                        <td><span class="status-badge status-preparing">PREPARING</span></td>
+                        <td>$7.50</td>
+                        <td>2026-06-08 12:14:27</td>
+                        <td>2026-06-08 12:14:27</td>
+                    </tr>
+                    <tr>
+                        <td>#15</td>
+                        <td><strong>LARGE</strong></td>
+                        <td>Oliver King</td>
+                        <td>0151 555 1014</td>
+                        <td>L15 6RR</td>
+                        <td>bbq chicken</td>
+                        <td><span class="status-badge status-ready">READY</span></td>
+                        <td>$10.00</td>
+                        <td>2026-06-08 12:14:27</td>
+                        <td>2026-06-08 12:14:27</td>
+                    </tr>
+                    <tr>
+                        <td>#16</td>
+                        <td><strong>SU</strong></td>
+                        <td>Paige Wright</td>
+                        <td>0151 555 1015</td>
+                        <td>L16 7SS</td>
+                        <td>caramelized onion</td>
+                        <td><span class="status-badge status-delivered">DELIVERED</span></td>
+                        <td>$12.00</td>
+                        <td>2026-06-08 12:14:27</td>
+                        <td>2026-06-08 12:14:27</td>
+                    </tr>
+                    <tr>
+                        <td>#17</td>
+                        <td><strong>SMALL</strong></td>
+                        <td>Quinn Scott</td>
+                        <td>0151 555 1016</td>
+                        <td>L17 8TT</td>
+                        <td>pepperoni</td>
+                        <td><span class="status-badge status-pending">PENDING</span></td>
+                        <td>$5.00</td>
+                        <td>2026-06-08 12:14:27</td>
+                        <td>2026-06-08 12:14:27</td>
+                    </tr>
+                    <tr>
+                        <td>#18</td>
+                        <td><strong>MEDIUM</strong></td>
+                        <td>Ruby Green</td>
+                        <td>0151 555 1017</td>
+                        <td>L18 9UU</td>
+                        <td>ham,onion</td>
+                        <td><span class="status-badge status-preparing">PREPARING</span></td>
+                        <td>$7.50</td>
+                        <td>2026-06-08 12:14:27</td>
+                        <td>2026-06-08 12:14:27</td>
+                    </tr>
+                    <tr>
+                        <td>#19</td>
+                        <td><strong>LARGE</strong></td>
+                        <td>Samuel Adams</td>
+                        <td>0151 555 1018</td>
+                        <td>L19 1VV</td>
+                        <td>mushroom,bell pepper</td>
+                        <td><span class="status-badge status-ready">READY</span></td>
+                        <td>$10.00</td>
+                        <td>2026-06-08 12:14:27</td>
+                        <td>2026-06-08 12:14:27</td>
+                    </tr>
+                    <tr>
+                        <td>#20</td>
+                        <td><strong>SU</strong></td>
+                        <td>Tara Bennett</td>
+                        <td>0151 555 1019</td>
+                        <td>L20 2WW</td>
+                        <td>sausage,onion</td>
+                        <td><span class="status-badge status-delivered">DELIVERED</span></td>
+                        <td>$12.00</td>
+                        <td>2026-06-08 12:14:27</td>
+                        <td>2026-06-08 12:14:27</td>
+                    </tr>
+                    <tr>
+                        <td>#21</td>
+                        <td><strong>SMALL</strong></td>
+                        <td>Ursula Morgan</td>
+                        <td>0151 555 1020</td>
+                        <td>L21 3XX</td>
+                        <td>vegetarian</td>
+                        <td><span class="status-badge status-pending">PENDING</span></td>
+                        <td>$5.00</td>
+                        <td>2026-06-08 12:14:27</td>
+                        <td>2026-06-08 12:14:27</td>
+                    </tr>
+                    <tr>
+                        <td>#22</td>
+                        <td><strong>MEDIUM</strong></td>
+                        <td>Violet Cox</td>
+                        <td>0151 555 1021</td>
+                        <td>L22 4YY</td>
+                        <td>three cheese</td>
+                        <td><span class="status-badge status-preparing">PREPARING</span></td>
+                        <td>$7.50</td>
+                        <td>2026-06-08 12:14:27</td>
+                        <td>2026-06-08 12:14:27</td>
+                    </tr>
+                    <tr>
+                        <td>#23</td>
+                        <td><strong>LARGE</strong></td>
+                        <td>William Parker</td>
+                        <td>0151 555 1022</td>
+                        <td>L23 5ZZ</td>
+                        <td>ham,pineapple</td>
+                        <td><span class="status-badge status-ready">READY</span></td>
+                        <td>$10.00</td>
+                        <td>2026-06-08 12:14:27</td>
+                        <td>2026-06-08 12:14:27</td>
+                    </tr>
+                    <tr>
+                        <td>#24</td>
+                        <td><strong>SU</strong></td>
+                        <td>Xavier Morris</td>
+                        <td>0151 555 1023</td>
+                        <td>L24 6AA</td>
+                        <td>garlic,herb</td>
+                        <td><span class="status-badge status-delivered">DELIVERED</span></td>
+                        <td>$12.00</td>
+                        <td>2026-06-08 12:14:27</td>
+                        <td>2026-06-08 12:14:27</td>
+                    </tr>
+                    <tr>
+                        <td>#25</td>
+                        <td><strong>SMALL</strong></td>
+                        <td>Yasmin Hughes</td>
+                        <td>0151 555 1024</td>
+                        <td>L25 7BB</td>
+                        <td>spinach,feta</td>
+                        <td><span class="status-badge status-pending">PENDING</span></td>
+                        <td>$5.00</td>
+                        <td>2026-06-08 12:14:27</td>
+                        <td>2026-06-08 12:14:27</td>
+                    </tr>
+                    <tr>
+                        <td>#26</td>
+                        <td><strong>MEDIUM</strong></td>
+                        <td>Zachary Hughes</td>
+                        <td>0151 555 1025</td>
+                        <td>L26 8CC</td>
+                        <td>bacon,tomato</td>
+                        <td><span class="status-badge status-preparing">PREPARING</span></td>
+                        <td>$7.50</td>
+                        <td>2026-06-08 12:14:27</td>
+                        <td>2026-06-08 12:14:27</td>
+                    </tr>
+                    <tr>
+                        <td>#27</td>
+                        <td><strong>LARGE</strong></td>
+                        <td>Ava Price</td>
+                        <td>0151 555 1026</td>
+                        <td>L27 9DD</td>
+                        <td>chicken,garlic</td>
+                        <td><span class="status-badge status-ready">READY</span></td>
+                        <td>$10.00</td>
+                        <td>2026-06-08 12:14:27</td>
+                        <td>2026-06-08 12:14:27</td>
+                    </tr>
+                    <tr>
+                        <td>#28</td>
+                        <td><strong>SU</strong></td>
+                        <td>Brooke Bell</td>
+                        <td>0151 555 1027</td>
+                        <td>L28 1EE</td>
+                        <td>fresh mozzarella</td>
+                        <td><span class="status-badge status-delivered">DELIVERED</span></td>
+                        <td>$12.00</td>
+                        <td>2026-06-08 12:14:27</td>
+                        <td>2026-06-08 12:14:27</td>
+                    </tr>
+                    <tr>
+                        <td>#29</td>
+                        <td><strong>SMALL</strong></td>
+                        <td>Callum Ward</td>
+                        <td>0151 555 1028</td>
+                        <td>L29 2FF</td>
+                        <td>olives,tomato</td>
+                        <td><span class="status-badge status-pending">PENDING</span></td>
+                        <td>$5.00</td>
+                        <td>2026-06-08 12:14:27</td>
+                        <td>2026-06-08 12:14:27</td>
+                    </tr>
+                    <tr>
+                        <td>#30</td>
+                        <td><strong>MEDIUM</strong></td>
+                        <td>Daisy Gray</td>
+                        <td>0151 555 1029</td>
+                        <td>L30 3GG</td>
+                        <td>seafood</td>
+                        <td><span class="status-badge status-preparing">PREPARING</span></td>
+                        <td>$7.50</td>
+                        <td>2026-06-08 12:14:27</td>
+                        <td>2026-06-08 12:14:27</td>
+                    </tr>
+                    <tr>
+                        <td>#31</td>
+                        <td><strong>LARGE</strong></td>
+                        <td>Elliot Fox</td>
+                        <td>0151 555 1030</td>
+                        <td>L31 4HH</td>
+                        <td>bbq chicken</td>
+                        <td><span class="status-badge status-ready">READY</span></td>
+                        <td>$10.00</td>
+                        <td>2026-06-08 12:14:27</td>
+                        <td>2026-06-08 12:14:27</td>
+                    </tr>
+                    <tr>
+                        <td>#32</td>
+                        <td><strong>SU</strong></td>
+                        <td>Freya Webb</td>
+                        <td>0151 555 1031</td>
+                        <td>L32 5JJ</td>
+                        <td>caramelized onion</td>
+                        <td><span class="status-badge status-delivered">DELIVERED</span></td>
+                        <td>$12.00</td>
+                        <td>2026-06-08 12:14:27</td>
+                        <td>2026-06-08 12:14:27</td>
+                    </tr>
+                    <tr>
+                        <td>#33</td>
+                        <td><strong>SMALL</strong></td>
+                        <td>Georgia Barrett</td>
+                        <td>0151 555 1032</td>
+                        <td>L33 6KK</td>
+                        <td>pepperoni</td>
+                        <td><span class="status-badge status-pending">PENDING</span></td>
+                        <td>$5.00</td>
+                        <td>2026-06-08 12:14:27</td>
+                        <td>2026-06-08 12:14:27</td>
+                    </tr>
+                    <tr>
+                        <td>#34</td>
+                        <td><strong>MEDIUM</strong></td>
+                        <td>Harry Mills</td>
+                        <td>0151 555 1033</td>
+                        <td>L34 7LL</td>
+                        <td>ham,onion</td>
+                        <td><span class="status-badge status-preparing">PREPARING</span></td>
+                        <td>$7.50</td>
+                        <td>2026-06-08 12:14:27</td>
+                        <td>2026-06-08 12:14:27</td>
+                    </tr>
+                    <tr>
+                        <td>#35</td>
+                        <td><strong>LARGE</strong></td>
+                        <td>Isla Jenkins</td>
+                        <td>0151 555 1034</td>
+                        <td>L35 8MM</td>
+                        <td>mushroom,bell pepper</td>
+                        <td><span class="status-badge status-ready">READY</span></td>
+                        <td>$10.00</td>
+                        <td>2026-06-08 12:14:27</td>
+                        <td>2026-06-08 12:14:27</td>
+                    </tr>
+                    <tr>
+                        <td>#36</td>
+                        <td><strong>SU</strong></td>
+                        <td>Jackie Marshall</td>
+                        <td>0151 555 1035</td>
+                        <td>L36 9NN</td>
+                        <td>sausage,onion</td>
+                        <td><span class="status-badge status-delivered">DELIVERED</span></td>
+                        <td>$12.00</td>
+                        <td>2026-06-08 12:14:27</td>
+                        <td>2026-06-08 12:14:27</td>
+                    </tr>
+                    <tr>
+                        <td>#37</td>
+                        <td><strong>SMALL</strong></td>
+                        <td>Kieran Reed</td>
+                        <td>0151 555 1036</td>
+                        <td>L37 1OO</td>
+                        <td>vegetarian</td>
+                        <td><span class="status-badge status-pending">PENDING</span></td>
+                        <td>$5.00</td>
+                        <td>2026-06-08 12:14:27</td>
+                        <td>2026-06-08 12:14:27</td>
+                    </tr>
+                    <tr>
+                        <td>#38</td>
+                        <td><strong>MEDIUM</strong></td>
+                        <td>Layla Simmons</td>
+                        <td>0151 555 1037</td>
+                        <td>L38 2PP</td>
+                        <td>three cheese</td>
+                        <td><span class="status-badge status-preparing">PREPARING</span></td>
+                        <td>$7.50</td>
+                        <td>2026-06-08 12:14:27</td>
+                        <td>2026-06-08 12:14:27</td>
+                    </tr>
+                    <tr>
+                        <td>#39</td>
+                        <td><strong>LARGE</strong></td>
+                        <td>Mia Price</td>
+                        <td>0151 555 1038</td>
+                        <td>L39 3QQ</td>
+                        <td>ham,pineapple</td>
+                        <td><span class="status-badge status-ready">READY</span></td>
+                        <td>$10.00</td>
+                        <td>2026-06-08 12:14:27</td>
+                        <td>2026-06-08 12:14:27</td>
+                    </tr>
+                    <tr>
+                        <td>#40</td>
+                        <td><strong>SU</strong></td>
+                        <td>Noah George</td>
+                        <td>0151 555 1039</td>
+                        <td>L40 4RR</td>
+                        <td>garlic,herb</td>
+                        <td><span class="status-badge status-delivered">DELIVERED</span></td>
+                        <td>$12.00</td>
+                        <td>2026-06-08 12:14:27</td>
+                        <td>2026-06-08 12:14:27</td>
+                    </tr>
+                    <tr>
+                        <td>#41</td>
+                        <td><strong>SMALL</strong></td>
+                        <td>Olivia Chapman</td>
+                        <td>0151 555 1040</td>
+                        <td>L41 5SS</td>
+                        <td>spinach,feta</td>
+                        <td><span class="status-badge status-pending">PENDING</span></td>
+                        <td>$5.00</td>
+                        <td>2026-06-08 12:14:27</td>
+                        <td>2026-06-08 12:14:27</td>
+                    </tr>
+                    <tr>
+                        <td>#42</td>
+                        <td><strong>MEDIUM</strong></td>
+                        <td>Poppy Dawson</td>
+                        <td>0151 555 1041</td>
+                        <td>L42 6TT</td>
+                        <td>bacon,tomato</td>
+                        <td><span class="status-badge status-preparing">PREPARING</span></td>
+                        <td>$7.50</td>
+                        <td>2026-06-08 12:14:27</td>
+                        <td>2026-06-08 12:14:27</td>
+                    </tr>
+                    <tr>
+                        <td>#43</td>
+                        <td><strong>LARGE</strong></td>
+                        <td>Rachel Ball</td>
+                        <td>0151 555 1042</td>
+                        <td>L43 7UU</td>
+                        <td>chicken,garlic</td>
+                        <td><span class="status-badge status-ready">READY</span></td>
+                        <td>$10.00</td>
+                        <td>2026-06-08 12:14:27</td>
+                        <td>2026-06-08 12:14:27</td>
+                    </tr>
+                    <tr>
+                        <td>#44</td>
+                        <td><strong>SU</strong></td>
+                        <td>Sophie Cole</td>
+                        <td>0151 555 1043</td>
+                        <td>L44 8VV</td>
+                        <td>fresh mozzarella</td>
+                        <td><span class="status-badge status-delivered">DELIVERED</span></td>
+                        <td>$12.00</td>
+                        <td>2026-06-08 12:14:27</td>
+                        <td>2026-06-08 12:14:27</td>
+                    </tr>
+                    <tr>
+                        <td>#45</td>
+                        <td><strong>SMALL</strong></td>
+                        <td>Thomas Griffith</td>
+                        <td>0151 555 1044</td>
+                        <td>L45 9WW</td>
+                        <td>olives,tomato</td>
+                        <td><span class="status-badge status-pending">PENDING</span></td>
+                        <td>$5.00</td>
+                        <td>2026-06-08 12:14:27</td>
+                        <td>2026-06-08 12:14:27</td>
+                    </tr>
+                    <tr>
+                        <td>#46</td>
+                        <td><strong>MEDIUM</strong></td>
+                        <td>Uma Foster</td>
+                        <td>0151 555 1045</td>
+                        <td>L46 1XX</td>
+                        <td>seafood</td>
+                        <td><span class="status-badge status-preparing">PREPARING</span></td>
+                        <td>$7.50</td>
+                        <td>2026-06-08 12:14:27</td>
+                        <td>2026-06-08 12:14:27</td>
+                    </tr>
+                    <tr>
+                        <td>#47</td>
+                        <td><strong>LARGE</strong></td>
+                        <td>Vera Webster</td>
+                        <td>0151 555 1046</td>
+                        <td>L47 2YY</td>
+                        <td>bbq chicken</td>
+                        <td><span class="status-badge status-ready">READY</span></td>
+                        <td>$10.00</td>
+                        <td>2026-06-08 12:14:27</td>
+                        <td>2026-06-08 12:14:27</td>
+                    </tr>
+                    <tr>
+                        <td>#48</td>
+                        <td><strong>SU</strong></td>
+                        <td>Will Riley</td>
+                        <td>0151 555 1047</td>
+                        <td>L48 3ZZ</td>
+                        <td>caramelized onion</td>
+                        <td><span class="status-badge status-delivered">DELIVERED</span></td>
+                        <td>$12.00</td>
+                        <td>2026-06-08 12:14:27</td>
+                        <td>2026-06-08 12:14:27</td>
+                    </tr>
+                    <tr>
+                        <td>#49</td>
+                        <td><strong>SMALL</strong></td>
+                        <td>Xanthe Hart</td>
+                        <td>0151 555 1048</td>
+                        <td>L49 4AA</td>
+                        <td>pepperoni</td>
+                        <td><span class="status-badge status-pending">PENDING</span></td>
+                        <td>$5.00</td>
+                        <td>2026-06-08 12:14:27</td>
+                        <td>2026-06-08 12:14:27</td>
+                    </tr>
+                    <tr>
+                        <td>#50</td>
+                        <td><strong>MEDIUM</strong></td>
+                        <td>Zoe Norris</td>
+                        <td>0151 555 1049</td>
+                        <td>L50 5BB</td>
+                        <td>ham,onion</td>
+                        <td><span class="status-badge status-preparing">PREPARING</span></td>
+                        <td>$7.50</td>
+                        <td>2026-06-08 12:14:27</td>
+                        <td>2026-06-08 12:14:27</td>
+                    </tr>
+                    <tr>
+                        <td>#51</td>
+                        <td><strong>MEDIUM</strong></td>
+                        <td>Aaron Smith</td>
+                        <td>0151 867 5309</td>
+                        <td>CH49 3AP</td>
+                        <td>ham.bacon</td>
+                        <td><span class="status-badge status-pending">PENDING</span></td>
+                        <td>$7.50</td>
+                        <td>2026-06-08 12:15:48</td>
+                        <td>2026-06-08 12:15:48</td>
+                    </tr>
+                    <tr>
+                        <td>#52</td>
+                        <td><strong>SMALL</strong></td>
+                        <td>Michael James OHanlon</td>
+                        <td>0151 999 9999</td>
+                        <td>CH49 3AP</td>
+                        <td>hamburger,green pepper</td>
+                        <td><span class="status-badge status-pending">PENDING</span></td>
+                        <td>$5.00</td>
+                        <td>2026-06-08 12:26:32</td>
+                        <td>2026-06-08 12:26:32</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <footer class="text-center text-muted mt-5">
+            <p>Generated by Pizza Shop System</p>
+        </footer>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        const orderMarkers = [
+            { location: "L1 1AA", order_name: "Aaron Smith", status: "pending", cost: 5.00 },
+            { location: "L2 2BB", order_name: "Bethany Jones", status: "preparing", cost: 7.50 },
+            { location: "L3 3CC", order_name: "Connor Brown", status: "ready", cost: 10.00 },
+            { location: "L4 4DD", order_name: "Danielle Wilson", status: "delivered", cost: 12.00 },
+            { location: "L5 5EE", order_name: "Ethan Taylor", status: "pending", cost: 5.00 },
+            { location: "L6 6FF", order_name: "Fiona Harris", status: "preparing", cost: 7.50 },
+            { location: "L7 7GG", order_name: "George Evans", status: "ready", cost: 10.00 },
+            { location: "L8 8HH", order_name: "Hannah Clark", status: "delivered", cost: 12.00 },
+            { location: "L9 9JJ", order_name: "Ian Roberts", status: "pending", cost: 5.00 },
+            { location: "L10 1LL", order_name: "Jasmine Lewis", status: "preparing", cost: 7.50 },
+            { location: "L11 2MM", order_name: "Kyle Walker", status: "ready", cost: 10.00 },
+            { location: "L12 3NN", order_name: "Laura Hall", status: "delivered", cost: 12.00 },
+            { location: "L13 4PP", order_name: "Mason Allen", status: "pending", cost: 5.00 },
+            { location: "L14 5QQ", order_name: "Nina Young", status: "preparing", cost: 7.50 },
+            { location: "L15 6RR", order_name: "Oliver King", status: "ready", cost: 10.00 },
+            { location: "L16 7SS", order_name: "Paige Wright", status: "delivered", cost: 12.00 },
+            { location: "L17 8TT", order_name: "Quinn Scott", status: "pending", cost: 5.00 },
+            { location: "L18 9UU", order_name: "Ruby Green", status: "preparing", cost: 7.50 },
+            { location: "L19 1VV", order_name: "Samuel Adams", status: "ready", cost: 10.00 },
+            { location: "L20 2WW", order_name: "Tara Bennett", status: "delivered", cost: 12.00 },
+            { location: "L21 3XX", order_name: "Ursula Morgan", status: "pending", cost: 5.00 },
+            { location: "L22 4YY", order_name: "Violet Cox", status: "preparing", cost: 7.50 },
+            { location: "L23 5ZZ", order_name: "William Parker", status: "ready", cost: 10.00 },
+            { location: "L24 6AA", order_name: "Xavier Morris", status: "delivered", cost: 12.00 },
+            { location: "L25 7BB", order_name: "Yasmin Hughes", status: "pending", cost: 5.00 },
+            { location: "L26 8CC", order_name: "Zachary Hughes", status: "preparing", cost: 7.50 },
+            { location: "L27 9DD", order_name: "Ava Price", status: "ready", cost: 10.00 },
+            { location: "L28 1EE", order_name: "Brooke Bell", status: "delivered", cost: 12.00 },
+            { location: "L29 2FF", order_name: "Callum Ward", status: "pending", cost: 5.00 },
+            { location: "L30 3GG", order_name: "Daisy Gray", status: "preparing", cost: 7.50 },
+            { location: "L31 4HH", order_name: "Elliot Fox", status: "ready", cost: 10.00 },
+            { location: "L32 5JJ", order_name: "Freya Webb", status: "delivered", cost: 12.00 },
+            { location: "L33 6KK", order_name: "Georgia Barrett", status: "pending", cost: 5.00 },
+            { location: "L34 7LL", order_name: "Harry Mills", status: "preparing", cost: 7.50 },
+            { location: "L35 8MM", order_name: "Isla Jenkins", status: "ready", cost: 10.00 },
+            { location: "L36 9NN", order_name: "Jackie Marshall", status: "delivered", cost: 12.00 },
+            { location: "L37 1OO", order_name: "Kieran Reed", status: "pending", cost: 5.00 },
+            { location: "L38 2PP", order_name: "Layla Simmons", status: "preparing", cost: 7.50 },
+            { location: "L39 3QQ", order_name: "Mia Price", status: "ready", cost: 10.00 },
+            { location: "L40 4RR", order_name: "Noah George", status: "delivered", cost: 12.00 },
+            { location: "L41 5SS", order_name: "Olivia Chapman", status: "pending", cost: 5.00 },
+            { location: "L42 6TT", order_name: "Poppy Dawson", status: "preparing", cost: 7.50 },
+            { location: "L43 7UU", order_name: "Rachel Ball", status: "ready", cost: 10.00 },
+            { location: "L44 8VV", order_name: "Sophie Cole", status: "delivered", cost: 12.00 },
+            { location: "L45 9WW", order_name: "Thomas Griffith", status: "pending", cost: 5.00 },
+            { location: "L46 1XX", order_name: "Uma Foster", status: "preparing", cost: 7.50 },
+            { location: "L47 2YY", order_name: "Vera Webster", status: "ready", cost: 10.00 },
+            { location: "L48 3ZZ", order_name: "Will Riley", status: "delivered", cost: 12.00 },
+            { location: "L49 4AA", order_name: "Xanthe Hart", status: "pending", cost: 5.00 },
+            { location: "L50 5BB", order_name: "Zoe Norris", status: "preparing", cost: 7.50 },
+            { location: "CH49 3AP", order_name: "Aaron Smith", status: "pending", cost: 7.50 },
+            { location: "CH49 3AP", order_name: "Michael James OHanlon", status: "pending", cost: 5.00 },
+        ];
+
+        const postcodeCoordinates = {
+            'L1': [53.4025, -2.9910],
+            'L2': [53.4095, -2.9824],
+            'L3': [53.4097, -2.9879],
+            'L4': [53.4177, -3.0002],
+            'L5': [53.4244, -2.9999],
+            'L6': [53.4352, -2.9812],
+            'L7': [53.4397, -2.9778],
+            'L8': [53.4478, -2.9880],
+            'L9': [53.4462, -2.9475],
+            'L10': [53.4717, -2.9660],
+            'L11': [53.4565, -3.0047],
+            'L12': [53.4308, -2.9804],
+            'L13': [53.4046, -2.9944],
+            'L14': [53.4038, -2.9701],
+            'L15': [53.3827, -2.9787],
+            'L16': [53.3807, -2.9735],
+            'L17': [53.3796, -2.9938],
+            'L18': [53.3552, -3.0016],
+            'L19': [53.3650, -2.9739],
+            'L20': [53.3820, -2.9303],
+            'L21': [53.3820, -2.9303],
+            'L22': [53.3820, -2.9303],
+            'L23': [53.3820, -2.9303],
+            'L24': [53.3820, -2.9303],
+            'L25': [53.3820, -2.9303],
+            'L26': [53.3820, -2.9303],
+            'L27': [53.3820, -2.9303],
+            'L28': [53.3820, -2.9303],
+            'L29': [53.3820, -2.9303],
+            'L30': [53.3820, -2.9303],
+            'L31': [53.3820, -2.9303],
+            'L32': [53.3820, -2.9303],
+            'L33': [53.3820, -2.9303],
+            'L34': [53.3820, -2.9303],
+            'L35': [53.3820, -2.9303],
+            'L36': [53.3820, -2.9303],
+            'L37': [53.3820, -2.9303],
+            'L38': [53.3820, -2.9303],
+            'L39': [53.3820, -2.9303],
+            'L40': [53.3820, -2.9303],
+            'L41': [53.3820, -2.9303],
+            'L42': [53.3820, -2.9303],
+            'L43': [53.3820, -2.9303],
+            'L44': [53.3820, -2.9303],
+            'L45': [53.3820, -2.9303],
+            'L46': [53.3820, -2.9303],
+            'L47': [53.3820, -2.9303],
+            'L48': [53.3820, -2.9303],
+            'L49': [53.3820, -2.9303],
+            'L50': [53.3820, -2.9303],
+            'CH49': [53.4100, -3.1600]
+        };
+
+        const map = L.map('map').setView([53.408, -2.991], 12);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        const markers = [];
+        orderMarkers.forEach(order => {
+            const prefix = order.location.split(' ')[0];
+            const coords = postcodeCoordinates[prefix] || [53.408, -2.991];
+            const marker = L.marker(coords).addTo(map);
+            marker.bindPopup(`<strong>${order.order_name}</strong><br>${order.location}<br>${order.status} - £${order.cost.toFixed(2)}`);
+            markers.push(marker);
+        });
+
+        if (markers.length) {
+            const group = L.featureGroup(markers);
+            map.fitBounds(group.getBounds().pad(0.2));
+        }
+    </script>
+</body>
+</html>
