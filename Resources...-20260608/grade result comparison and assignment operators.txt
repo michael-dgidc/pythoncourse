@@ -1,0 +1,20 @@
+#using COMPARISON and ASSIGNMENT operators
+#grade result program
+percentage = int(input("Enter your percentage mark e.g. 75")) #assignment operator
+result = "" #assigning an empty value to this variable
+if percentage >= 70: #greater than or equal to operator
+    result = "distinction" #assignment operator
+elif percentage >= 60:
+    result = "merit"
+elif percentage >= 40:
+    result = "pass"
+else:
+    result = "fail"
+print ("You entered percentage mark of " + str(percentage) + " the result awarded is a " + str(result))
+#CHALLENGE, write a program that asks users to enter their percentage mark and returns the following
+#A mark of 80% and above is awarded an A.
+#A mark in the range of 70% through to 79% is awarded a B.
+#A mark in the range of 60% through to 69% is awarded a C.
+#A mark in the range of 50% through to 59% is awarded a D.
+#A mark in the range of 40% through to 49% is awarded a E.
+#Marks less than 40% are awarded an F.

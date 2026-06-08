@@ -1,0 +1,26 @@
+# uses user-defined functions
+# This program will output an ASCII art image 
+# ----------------
+# User-defined function
+# ----------------
+def outputapple(): #def command, which means “define a section of code”, then choose a suitable name
+  print("""
+            .:'
+        __ :'__
+     .'`__`-'__``.
+    :__________.-'
+    :_________:
+     :_________`-;
+      `.__.-.__.'
+    """)
+#The code that is part of the user-defined function has to be below the line where it is defined
+#It needs to be indented by two or four spaces 
+# ----------------
+# Main program
+# ----------------
+outputapple()#call the user-defined function to run
+#as user-defined fuctions are separate from the main program, the code inside them will not execute until called
+
+#CHALLENGE, create a new subprogram which displays a welcome message to the user
+#CHALLENGE, create a new subprogram which should display another piece of ASCII art 
+#use https://www.asciiart.eu/ to find some ASCII art

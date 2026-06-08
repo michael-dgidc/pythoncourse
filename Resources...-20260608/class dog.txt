@@ -1,0 +1,19 @@
+class Dog:
+ 
+    #Attributes
+    named = 'Clyde'
+    age = '7'
+
+    #Methods
+    def bark(self):
+        print('Woof!')
+
+#Create an instance of the Dog class
+my_Dog = Dog()
+
+#Access the attributes of the instance
+print(my_Dog.named)
+print(my_Dog.age)
+
+#Call the bark() method
+my_Dog.bark()

@@ -1,0 +1,16 @@
+#uses while loop and decision making
+#guess the number program
+mynumber=26#assign the secret number
+print("Let's play a guessing game, what two-digit number am I thinking of?")
+while True:
+    usernumber = int(input("Guess a number:"))
+
+    if usernumber < mynumber:
+        print("a little higher!")
+    elif usernumber > mynumber:
+        print("a little lower!")
+    else:
+        print("\nYou read my mind! It was " + str(mynumber) + ", well done!")
+        break
+#CHALLENGE, add a counter which increases with every guess, then outputs the number of guesses
+ 

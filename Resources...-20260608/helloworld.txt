@@ -1,0 +1,5 @@
+# This program will practice print statements
+print("Hello World!") # Well done, you have written your first line of Python code!
+print ("""Hello World 
+my name is Joe Bloggs!""") # Print a string across numerous lines, use three quotation marks at the start and end
+print("Hello World \nmy name is \nJoe Bloggs") # Use the line feed character "\n" to force a new line

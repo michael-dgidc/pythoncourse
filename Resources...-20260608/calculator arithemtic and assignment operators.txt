@@ -1,0 +1,17 @@
+#using ARITHMETIC and ASSIGNMENT operators
+print(30+5)
+print(30/5)
+print(30*5)
+print(33-5)
+num1 = float(input("Enter first value: "))
+num2 = float(input("Enter second value: "))
+print("Addition =", num1 + num2)
+print("Subtraction:", num1 - num2)
+print("Multiplication:", num1 * num2)
+print("Division:", num1 / num2)
+#CHALLENGE, add comments to explain what the code is doing
+#CHALLENGE, add comments to identify where the operators are
+#CHALLENGE, try changing the data type from float to int, what happens?
+
+
+

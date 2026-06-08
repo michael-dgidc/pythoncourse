@@ -1,0 +1,6 @@
+#uses module and built-in function
+import random #import random module
+
+mynumber= random.randint(10,99) #assign random number to variable
+print("Your random number is: " + str(mynumber)) #output the random number
+#CHALLENGE, create a "guess the number game" and randomly generate the number to guess
