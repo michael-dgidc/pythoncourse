@@ -1,0 +1,11 @@
+Pizza ordering is the process of choosing a pizza, customizing it if needed, and submitting that choice to a pizza shop for preparation and delivery.
+
+What it is:
+- selecting size, toppings, crust, and quantity
+- specifying customer details like name, address, and payment
+- submitting an order so the restaurant can make the pizza
+
+What it illustrates:
+- a real-world example of a user request being turned into a structured task
+- how input data can be collected, validated, and processed
+- the flow from customer choice to order confirmation and fulfillment

@@ -17,7 +17,8 @@ while True:
     print('1) Create profile')
     print('2) List profiles (list)')
     print('3) List profiles (dict)')
-    print('4) Exit')
+    print('4) Exam score grading example')
+    print('5) Exit')
     choice = input('Choose an option: ').strip()
 
     # using comparison operator to check the choice
@@ -104,6 +105,31 @@ while True:
                 print(f"{k}: {p['name']} - age: {p['age']} - balance: {p['balance']} - active: {p['active']} - role: {p.get('role')}")
 
     elif choice == '4':
+        # exam scoring example based on percentage input
+        try:
+            percentage2 = float(input('Enter your percentage mark e.g. 75%: ').strip())
+        except ValueError:
+            print('Invalid percentage input')
+            continue
+
+        result = ''  # assigns an empty value for this variable
+
+        if percentage2 >= 80:  # specifically relate to the entered text being greater than or equal to 80
+            result = 'A'  # user output relates variable text, character A, to a score greater than or equal to 80
+        elif percentage2 >= 70:  # percentage between 70 and 79.999...
+            result = 'B'  # user output relates variable text, character B, to a score greater than or equal to 70
+        elif percentage2 >= 60:
+            result = 'C'  # user output relates variable text, character C, to a score greater than or equal to 60
+        elif percentage2 >= 50:
+            result = 'D'  # user output relates variable text, character D, to a score greater than or equal to 50
+        elif percentage2 >= 40:
+            result = 'E'  # user output relates variable text, character E, to a score greater than or equal to 40
+        else:
+            result = 'F'  # user output relates variable text, character F, to any other score i.e. less than 40
+
+        print('You entered a percentage mark of ' + str(percentage2) + ' the result awarded is a ' + str(result))
+
+    elif choice == '5':
         break
     else:
         print('Invalid option, try again')

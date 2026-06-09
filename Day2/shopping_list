@@ -1,0 +1,23 @@
+# This program will demonstrate how we can store and manipulate a list (data structure)
+
+shoppinglist1=["6 apples", "milk", "bread", "12 eggs"] #variable name and assign value using brackets
+print("How many items on the shopping list?")
+print(len(shoppinglist1)) #print how many items are on the list
+shoppinglist1.sort() #sort the list into alphabetical order
+print(shoppinglist1) #output what the variable holds
+#run your program here to see the results 
+shoppinglist2=["cake", "biscuits", "chocolate"] #initialize
+shoppinglist2.sort(reverse=True)#reverse order list items
+for x in shoppinglist2: #output all items one by one until no more
+  print(x)
+#run your program here to see the results 
+fulllist=shoppinglist1 + shoppinglist2 #join lists together and store 
+print(fulllist) 
+#run your program here to see the results 
+#CHALLENGE can you sort list alphabetically, list items one by one and print how many items are in the list?
+full_sorted = sorted(fulllist)  # sort 
+print('Sorted full list:')
+for item in full_sorted:
+    print(item)  # list items one by one
+print('Total items in sorted list:', len(full_sorted))
+

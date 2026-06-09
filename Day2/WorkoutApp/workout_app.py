@@ -8,13 +8,19 @@ import tempfile
 import time
 import winsound
 from pathlib import Path
-from gtts import gTTS
+
+try:
+    from gtts import gTTS
+    GTTS_AVAILABLE = True
+except ImportError:
+    gTTS = None
+    GTTS_AVAILABLE = False
 
 # Root cache directory for generated audio files
 CACHE_DIR = Path(".cache")
 # Cache folder for short status sound bytes
 STATUS_CACHE_DIR = CACHE_DIR / "status"
-# Cache folder for full workout MP3 audio files
+# Cache folder for full workout audio files
 WORKOUT_CACHE_DIR = CACHE_DIR / "workout"
 # Local copy of the workout audio file
 WORKOUT_FILE = Path("workout.mp3")
@@ -39,9 +45,28 @@ STATUS_PHRASES = {
     "countdown_2": "Two.",
     "countdown_1": "One.",
     "go": "Go!",
+    "motivate": "Go {name}, go {name}!",
+    "go_michael": "Go Michael! Keep pushing!",
     "keep_going": "Keep going.",
     "exercise_complete": "Exercise complete.",
     "workout_complete": "Great work. Workout complete.",
+}
+
+# Cached lookup table for status phrase audio filenames
+STATUS_PHRASE_FILES = {
+    "hello": "hello.wav",
+    "utilize": "utilize.wav",
+    "start_now": "start_now.wav",
+    "ready": "ready.wav",
+    "countdown_3": "countdown_3.wav",
+    "countdown_2": "countdown_2.wav",
+    "countdown_1": "countdown_1.wav",
+    "go": "go.wav",
+    "motivate": "motivate.wav",
+    "go_michael": "go_michael_gui.wav",
+    "keep_going": "keep_going.wav",
+    "exercise_complete": "exercise_complete.wav",
+    "workout_complete": "workout_complete.wav",
 }
 
 AUDIO_CACHE = {}
@@ -91,11 +116,26 @@ def synthesize_to_wav_bytes(text: str) -> bytes:
     return wav_bytes
 
 
+# Synthesize text into a WAV file using the local Windows speech engine
+def synthesize_text_to_wav_file(text: str, path: Path) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    safe_text = text.replace("'", "''")
+    ps_command = (
+        "Add-Type -AssemblyName System.Speech; "
+        "$s = New-Object System.Speech.Synthesis.SpeechSynthesizer; "
+        f"$s.SetOutputToWaveFile('{path}'); "
+        f"$s.Speak('{safe_text}'); "
+        "$s.Dispose();"
+    )
+    subprocess.run(["powershell", "-NoProfile", "-Command", ps_command], check=True)
+
+
 # Compute the disk cache path for a status audio file
 def get_status_cache_path(status: str, name: str) -> Path:
     name_hash = hashlib.sha256(name.encode("utf-8")).hexdigest()
-    safe_status = status.replace("/", "_")
-    return STATUS_CACHE_DIR / f"{safe_status}_{name_hash}.wav"
+    filename = STATUS_PHRASE_FILES.get(status, f"{status}.wav")
+    cache_name = f"{Path(filename).stem}_{name_hash}.wav"
+    return STATUS_CACHE_DIR / cache_name
 
 
 # Load a cached status sound or generate it if missing
@@ -118,14 +158,15 @@ def build_audio_cache(name: str) -> None:
     AUDIO_CACHE.clear()
     for status in STATUS_PHRASES:
         AUDIO_CACHE[status] = load_or_create_status_bytes(status, name)
+    print(f"Audio cache built: {len(AUDIO_CACHE)} cached audio clips ready")
 
 
 # Play a cached status sound from memory
 def play_status_sound(status: str) -> None:
     if status not in AUDIO_CACHE:
         return
-    # Play the cached WAV bytes asynchronously in memory
-    winsound.PlaySound(AUDIO_CACHE[status], winsound.SND_MEMORY | winsound.SND_ASYNC | winsound.SND_NODEFAULT)
+    # Play the cached WAV bytes synchronously (blocks until audio finishes)
+    winsound.PlaySound(AUDIO_CACHE[status], winsound.SND_MEMORY)
 
 
 # Build the full workout narration text for the cached MP3 output
@@ -189,9 +230,12 @@ def run_live_workout(name: str) -> None:
         time.sleep(1)
 
         play_status_sound("go")
+        motivation_interval = 5  # Play motivational audio every 5 seconds
         for remaining in range(DURATION_SECONDS, 0, -1):
             print(f"{format_current_time()} - {exercise}: {remaining} seconds remaining", end="\r")
-            if remaining == 20:
+            if remaining % motivation_interval == 0:
+                play_status_sound("motivate")
+            elif remaining == 20:
                 play_status_sound("keep_going")
             time.sleep(1)
 
@@ -205,37 +249,50 @@ def run_live_workout(name: str) -> None:
     print(f"{format_current_time()} - Great work, {name}! Workout complete.")
 
 
-# Compute the cached workout MP3 path for the workout text
+# Compute the cached workout audio path for the workout text
 def get_workout_cache_path(text: str) -> Path:
     # Create the workout cache directory and return a path based on a text hash
     WORKOUT_CACHE_DIR.mkdir(parents=True, exist_ok=True)
     text_hash = hashlib.sha256(text.encode("utf-8")).hexdigest()
-    return WORKOUT_CACHE_DIR / f"workout_{text_hash}.mp3"
+    ext = "mp3" if GTTS_AVAILABLE else "wav"
+    return WORKOUT_CACHE_DIR / f"workout_{text_hash}.{ext}"
+
+
+# Build the full workout audio file and store it in the cache
+def build_workout_audio(name: str) -> Path:
+    workout_text = build_workout_text(name)
+    workout_cache_path = get_workout_cache_path(workout_text)
+    if workout_cache_path.exists():
+        print(f"Using cached workout audio: {workout_cache_path}")
+        return workout_cache_path
+
+    print("Generating one workout audio file for the full session...")
+    if GTTS_AVAILABLE:
+        tts = gTTS(text=workout_text, lang="en")
+        tts.save(str(workout_cache_path))
+    else:
+        synthesize_text_to_wav_file(workout_text, workout_cache_path)
+    print(f"Saved cached workout audio: {workout_cache_path}")
+    return workout_cache_path
 
 
 # Main application entry point for the workout app
 def main() -> None:
     # Entry point for the workout app
     user_name = get_user_name()
-    workout_text = build_workout_text(user_name)
+    print("Building audio cache for live cues...")
+    build_audio_cache(user_name)
     print("Preparing workout audio...")
+    workout_path = build_workout_audio(user_name)
 
-    workout_cache_path = get_workout_cache_path(workout_text)
-    if workout_cache_path.exists():
-        workout_path = workout_cache_path
-        print(f"Using cached workout audio: {workout_cache_path}")
+    if workout_path is not None:
+        if workout_path != WORKOUT_FILE:
+            shutil.copy2(workout_path, WORKOUT_FILE)
+        print(f"Opening workout audio file: {workout_path}")
+        open_audio_file(workout_path)
+        print("Workout audio generated and opened. Follow the prompts in the audio player.")
     else:
-        print("Generating workout audio...")
-        tts = gTTS(text=workout_text, lang="en")
-        tts.save(str(workout_cache_path))
-        workout_path = workout_cache_path
-        print(f"Saved cached workout audio: {workout_cache_path}")
-
-    # Keep a local copy for playback and preserve the cached file
-    if workout_path != WORKOUT_FILE:
-        shutil.copy2(workout_path, WORKOUT_FILE)
-    open_audio_file(workout_path)
-    run_live_workout(user_name)
+        print("Failed to generate workout audio.")
 
 
 if __name__ == "__main__":
