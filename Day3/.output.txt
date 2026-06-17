@@ -1,0 +1,208 @@
+Command finished with exit code 0.
+Command output:
+warning: adding embedded git repository: Day7/Commits  for Version Control
+hint: You've added another git repository inside your current repository.
+hint: Clones of the outer repository will not contain the contents of
+hint: the embedded repository and will not know how to obtain it.
+hint: If you meant to add a submodule, use:
+hint:
+hint: 	git submodule add <url> Day7/Commits  for Version Control
+hint:
+hint: If you added this path by mistake, you can remove it from the
+hint: index with:
+hint:
+hint: 	git rm --cached Day7/Commits  for Version Control
+hint:
+hint: See "git help submodule" for more information.
+hint: Disable this message with "git config set advice.addEmbeddedRepo false"
+warning: adding embedded git repository: Day7/free-python-games
+warning: adding embedded git repository: Day7/wordGame
+On branch test/test1
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+	modified:   Day2/WorkoutApp/workout_app.py
+	modified:   Day3/.idea/day3.iml
+	modified:   Day3/.idea/misc.xml
+	modified:   Day3/.idea/modules.xml
+	new file:   Day3/BudgetTracker.htm
+	modified:   Day3/Day4/Commands.py
+	modified:   Day3/Day4/OOP.py
+	new file:   Day3/Day4/memory.json
+	new file:   Day3/Day4/memory_log.json
+	new file:   Day3/Stats.py
+	new file:   Day3/WorkoutApp/WorkoutApp.py
+	new file:   Day3/WorkoutApp/soundtest.py
+	new file:   Day3/WorkoutApp/workout_config.py
+	new file:   Day3/assessment_sample.py
+	modified:   Day3/count_while_loop.py
+	new file:   Day3/face_display.py
+	new file:   Day3/pyproject.toml
+	new file:   Day3/shapes_ai/generate_data.py
+	new file:   Day3/shapes_ai/model_cache.json
+	new file:   Day3/shapes_ai/shape_classifier.py
+	new file:   Day3/shapes_ai/test/test_0.json
+	new file:   Day3/shapes_ai/test/test_1.json
+	new file:   Day3/shapes_ai/test/test_2.json
+	new file:   Day3/shapes_ai/test/test_3.json
+	new file:   Day3/shapes_ai/test/test_4.json
+	new file:   Day3/shapes_ai/test/test_5.json
+	new file:   Day3/shapes_ai/test/test_6.json
+	new file:   Day3/shapes_ai/test/test_7.json
+	new file:   Day3/shapes_ai/test/test_8.json
+	new file:   Day3/shapes_ai/test/test_9.json
+	new file:   Day3/shapes_ai/training/squares/square_0.json
+	new file:   Day3/shapes_ai/training/squares/square_1.json
+	new file:   Day3/shapes_ai/training/squares/square_10.json
+	new file:   Day3/shapes_ai/training/squares/square_11.json
+	new file:   Day3/shapes_ai/training/squares/square_12.json
+	new file:   Day3/shapes_ai/training/squares/square_13.json
+	new file:   Day3/shapes_ai/training/squares/square_14.json
+	new file:   Day3/shapes_ai/training/squares/square_15.json
+	new file:   Day3/shapes_ai/training/squares/square_16.json
+	new file:   Day3/shapes_ai/training/squares/square_17.json
+	new file:   Day3/shapes_ai/training/squares/square_18.json
+	new file:   Day3/shapes_ai/training/squares/square_19.json
+	new file:   Day3/shapes_ai/training/squares/square_2.json
+	new file:   Day3/shapes_ai/training/squares/square_3.json
+	new file:   Day3/shapes_ai/training/squares/square_4.json
+	new file:   Day3/shapes_ai/training/squares/square_5.json
+	new file:   Day3/shapes_ai/training/squares/square_6.json
+	new file:   Day3/shapes_ai/training/squares/square_7.json
+	new file:   Day3/shapes_ai/training/squares/square_8.json
+	new file:   Day3/shapes_ai/training/squares/square_9.json
+	new file:   Day3/shapes_ai/training/triangles/triangle_0.json
+	new file:   Day3/shapes_ai/training/triangles/triangle_1.json
+	new file:   Day3/shapes_ai/training/triangles/triangle_10.json
+	new file:   Day3/shapes_ai/training/triangles/triangle_11.json
+	new file:   Day3/shapes_ai/training/triangles/triangle_12.json
+	new file:   Day3/shapes_ai/training/triangles/triangle_13.json
+	new file:   Day3/shapes_ai/training/triangles/triangle_14.json
+	new file:   Day3/shapes_ai/training/triangles/triangle_15.json
+	new file:   Day3/shapes_ai/training/triangles/triangle_16.json
+	new file:   Day3/shapes_ai/training/triangles/triangle_17.json
+	new file:   Day3/shapes_ai/training/triangles/triangle_18.json
+	new file:   Day3/shapes_ai/training/triangles/triangle_19.json
+	new file:   Day3/shapes_ai/training/triangles/triangle_2.json
+	new file:   Day3/shapes_ai/training/triangles/triangle_3.json
+	new file:   Day3/shapes_ai/training/triangles/triangle_4.json
+	new file:   Day3/shapes_ai/training/triangles/triangle_5.json
+	new file:   Day3/shapes_ai/training/triangles/triangle_6.json
+	new file:   Day3/shapes_ai/training/triangles/triangle_7.json
+	new file:   Day3/shapes_ai/training/triangles/triangle_8.json
+	new file:   Day3/shapes_ai/training/triangles/triangle_9.json
+	new file:   Day3/shapes_ai_png/generate_png_data.py
+	new file:   Day3/shapes_ai_png/model_cache_png.json
+	new file:   Day3/shapes_ai_png/shape_classifier_png.py
+	new file:   Day3/shapes_ai_png/test/test_0_square.png
+	new file:   Day3/shapes_ai_png/test/test_1_triangle.png
+	new file:   Day3/shapes_ai_png/test/test_2_square.png
+	new file:   Day3/shapes_ai_png/test/test_3_triangle.png
+	new file:   Day3/shapes_ai_png/test/test_4_square.png
+	new file:   Day3/shapes_ai_png/test/test_5_triangle.png
+	new file:   Day3/shapes_ai_png/test/test_6_triangle.png
+	new file:   Day3/shapes_ai_png/test/test_7_triangle.png
+	new file:   Day3/shapes_ai_png/test/test_8_triangle.png
+	new file:   Day3/shapes_ai_png/test/test_9_triangle.png
+	new file:   Day3/shapes_ai_png/training/squares/square_0.png
+	new file:   Day3/shapes_ai_png/training/squares/square_1.png
+	new file:   Day3/shapes_ai_png/training/squares/square_10.png
+	new file:   Day3/shapes_ai_png/training/squares/square_11.png
+	new file:   Day3/shapes_ai_png/training/squares/square_12.png
+	new file:   Day3/shapes_ai_png/training/squares/square_13.png
+	new file:   Day3/shapes_ai_png/training/squares/square_14.png
+	new file:   Day3/shapes_ai_png/training/squares/square_15.png
+	new file:   Day3/shapes_ai_png/training/squares/square_16.png
+	new file:   Day3/shapes_ai_png/training/squares/square_17.png
+	new file:   Day3/shapes_ai_png/training/squares/square_18.png
+	new file:   Day3/shapes_ai_png/training/squares/square_19.png
+	new file:   Day3/shapes_ai_png/training/squares/square_2.png
+	new file:   Day3/shapes_ai_png/training/squares/square_3.png
+	new file:   Day3/shapes_ai_png/training/squares/square_4.png
+	new file:   Day3/shapes_ai_png/training/squares/square_5.png
+	new file:   Day3/shapes_ai_png/training/squares/square_6.png
+	new file:   Day3/shapes_ai_png/training/squares/square_7.png
+	new file:   Day3/shapes_ai_png/training/squares/square_8.png
+	new file:   Day3/shapes_ai_png/training/squares/square_9.png
+	new file:   Day3/shapes_ai_png/training/triangles/triangle_0.png
+	new file:   Day3/shapes_ai_png/training/triangles/triangle_1.png
+	new file:   Day3/shapes_ai_png/training/triangles/triangle_10.png
+	new file:   Day3/shapes_ai_png/training/triangles/triangle_11.png
+	new file:   Day3/shapes_ai_png/training/triangles/triangle_12.png
+	new file:   Day3/shapes_ai_png/training/triangles/triangle_13.png
+	new file:   Day3/shapes_ai_png/training/triangles/triangle_14.png
+	new file:   Day3/shapes_ai_png/training/triangles/triangle_15.png
+	new file:   Day3/shapes_ai_png/training/triangles/triangle_16.png
+	new file:   Day3/shapes_ai_png/training/triangles/triangle_17.png
+	new file:   Day3/shapes_ai_png/training/triangles/triangle_18.png
+	new file:   Day3/shapes_ai_png/training/triangles/triangle_19.png
+	new file:   Day3/shapes_ai_png/training/triangles/triangle_2.png
+	new file:   Day3/shapes_ai_png/training/triangles/triangle_3.png
+	new file:   Day3/shapes_ai_png/training/triangles/triangle_4.png
+	new file:   Day3/shapes_ai_png/training/triangles/triangle_5.png
+	new file:   Day3/shapes_ai_png/training/triangles/triangle_6.png
+	new file:   Day3/shapes_ai_png/training/triangles/triangle_7.png
+	new file:   Day3/shapes_ai_png/training/triangles/triangle_8.png
+	new file:   Day3/shapes_ai_png/training/triangles/triangle_9.png
+	new file:   Day3/time_and_epoch.py
+	new file:   Day3/useful_project/README.md
+	new file:   Day3/useful_project/Screenshot 2026-06-09 124537.png
+	new file:   Day3/useful_project/Screenshot 2026-06-09 124619.png
+	new file:   Day3/useful_project/Screenshot 2026-06-09 124712.png
+	new file:   Day3/useful_project/associate_html_chrome.ps1
+	new file:   Day3/useful_project/budget_expenses.csv
+	new file:   Day3/useful_project/budget_expenses.html
+	new file:   Day3/useful_project/budget_tracker.py
+	new file:   Day3/useful_project/data_store.py
+	new file:   Day3/useful_project/expenses.json
+	new file:   Day3/useful_project/reports.py
+	new file:   Day3/useful_project/test_export.py
+	new file:   Day3/uv.lock
+	new file:   Day4/Commands.py
+	new file:   Day4/OOP.py
+	new file:   Day4/memory_log.json
+	new file:   Day7/Commits  for Version Control
+	new file:   Day7/Day7 Project Michael.docx
+	new file:   Day7/free-python-games
+	new file:   Day7/wordGame
+	new file:   SimpleAI/.vs/SimpleAI.slnx/FileContentIndex/47d9aa8d-89db-44de-8d25-69906999785e.vsidx
+	new file:   SimpleAI/.vs/SimpleAI.slnx/FileContentIndex/601743f2-bfca-4aed-a051-e4d595adeb70.vsidx
+	new file:   SimpleAI/.vs/SimpleAI.slnx/FileContentIndex/a40d7364-ca2e-40cf-a52f-9f0daf337bb2.vsidx
+	new file:   SimpleAI/.vs/SimpleAI.slnx/v18/.wsuo
+	new file:   SimpleAI/.vs/SimpleAI/CopilotIndices/18.6.39510.42782/CodeChunks.db
+	new file:   SimpleAI/.vs/SimpleAI/CopilotIndices/18.6.39510.42782/CodeChunks.db-shm
+	new file:   SimpleAI/.vs/SimpleAI/CopilotIndices/18.6.39510.42782/CodeChunks.db-wal
+	new file:   SimpleAI/.vs/SimpleAI/CopilotIndices/18.6.39510.42782/SemanticSymbols.db
+	new file:   SimpleAI/.vs/SimpleAI/CopilotIndices/18.6.39510.42782/SemanticSymbols.db-shm
+	new file:   SimpleAI/.vs/SimpleAI/CopilotIndices/18.6.39510.42782/SemanticSymbols.db-wal
+	new file:   SimpleAI/.vs/slnx.sqlite
+	new file:   SimpleAI/DefaultPredictor.py
+	new file:   SimpleAI/ExamPredictor.py
+	new file:   SimpleAI/InsuranceRisk.py
+	new file:   memory.json
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+  (commit or discard the untracked or modified content in submodules)
+	modified:   Day7/free-python-games (modified content)
+	modified:   Day7/wordGame (untracked content)
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	"' \357\201\274 sort"
+	"' \357\201\274 sort -t, -k4,4"
+	.cache/
+	.vs/
+	Day3/WorkoutApp/__pycache__/
+	Day3/hs_err_pid15428.log
+	Day3/hs_err_pid18736.log
+	Day3/hs_err_pid27980.log
+	Day3/replay_pid18736.log
+	Day3/useful_project/__pycache__/
+	hortlog -sn --all
+	hs_err_pid392.log
+	"h\357\200\242,\357\200\242author\357\200\242,\357\200\242date\357\200\242,\357\200\242message\357\200\242'"
+	"h\357\200\242,\357\200\242author\357\200\242,\357\200\242email\357\200\242,\357\200\242date\357\200\242,\357\200\242message\357\200\242'"
+	ort -u
+	replay_pid392.log
+	workout.mp3
