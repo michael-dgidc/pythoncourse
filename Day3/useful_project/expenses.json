@@ -1,0 +1,38 @@
+[
+  {
+    "date": "2026-06-09",
+    "amount": 12.0,
+    "category": "food",
+    "description": "Olive Oil"
+  },
+  {
+    "date": "2026-06-09",
+    "amount": 12.0,
+    "category": "bills",
+    "description": "Jam"
+  },
+  {
+    "date": "2026-06-09",
+    "amount": 10.0,
+    "category": "bills",
+    "description": "Jam"
+  },
+  {
+    "date": "2026-06-09",
+    "amount": 12.0,
+    "category": "food",
+    "description": "Test"
+  },
+  {
+    "date": "2026-06-09",
+    "amount": 2.0,
+    "category": "bills",
+    "description": "Jam"
+  },
+  {
+    "date": "2026-06-09",
+    "amount": 22.0,
+    "category": "food",
+    "description": "No description"
+  }
+]
