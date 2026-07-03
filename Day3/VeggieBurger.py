@@ -104,14 +104,14 @@ def print_report(nutrition, burger_size, batch_size):
 
     print("\n--- PER BURGER NUTRITION + RDA ---\n")
 
-    for i, key in enumerate(metric_keys):
-        val = per_burger[i]
+    for i, key in enumerate(metric_keys, start=1):
+        val = per_burger[i - 1]
 
         if key in RDA:
             pct = (val / RDA[key]) * 100
-            print(f"{key:12s}: {val:6.1f}  ({pct:5.1f}% RDA)")
+            print(f"{i:2d}. {key.title():12s}: {val:7.1f} ({pct:5.1f}% RDA)")
         else:
-            print(f"{key:12s}: {val:6.1f}")
+            print(f"{i:2d}. {key.title():12s}: {val:7.1f}")
 
     cost_per_burger = nutrition[-1] / batch_size
 
